@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Molecular Mass Challenge · Holiday Chemistry</title>
+<style>
+:root{
+  --red:#c8102e;--red-d:#9b0a22;--green:#0b6b4a;--green-d:#06402c;--green-dd:#042b1e;
+  --gold:#f6c445;--gold-d:#c99a1a;--cream:#fffaf0;--ink:#12261f;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Inter","SF Pro Display","Segoe UI Variable","Segoe UI","Helvetica Neue",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  color:var(--cream);min-height:100vh;touch-action:manipulation;
+  background:
+    radial-gradient(1100px 650px at 15% -10%,#12805a 0%,transparent 60%),
+    radial-gradient(900px 600px at 100% 0,#7d0b1f 0%,transparent 55%),
+    linear-gradient(160deg,#06402c,#042b1e);
+  background-attachment:fixed;
+}
+#snow{position:fixed;inset:0;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:14px 14px 40px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:10px 6px 16px;gap:10px}
+.logo{font-weight:800;font-size:clamp(20px,4vw,30px);letter-spacing:-.02em}
+.logo span{color:var(--gold)}
+.logo small{display:block;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#bfe3d3;margin-top:2px}
+.tools{display:flex;gap:8px}
+button{font:inherit;cursor:pointer;border:0;color:inherit}
+.icon{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:10px 14px;font-size:16px;color:#fff;transition:.15s;white-space:nowrap}
+.icon:hover{background:rgba(255,255,255,.22)}
+.icon.small{font-size:13px;padding:7px 12px;background:var(--green);border-color:var(--green-d);border-radius:999px;color:#fff}
+
+.card{background:var(--cream);color:var(--ink);border-radius:24px;padding:24px;border:3px solid var(--gold);box-shadow:0 20px 50px rgba(0,0,0,.4);position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;background:repeating-linear-gradient(45deg,var(--red) 0 14px,#fff 14px 28px)}
+.card>*:first-child{margin-top:8px}
+h1{font-size:clamp(26px,5vw,40px);letter-spacing:-.03em;line-height:1.1;color:var(--red-d)}
+h2{font-size:clamp(18px,3vw,24px);letter-spacing:-.02em;color:var(--green-d)}
+h3{font-size:16px;color:var(--red-d);margin-bottom:6px}
+.lead{margin:10px 0 18px;color:#3b5249;line-height:1.55}
+label.l{display:block;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--green-d);margin:16px 0 8px}
+input[type=text]{width:100%;font:inherit;font-size:18px;padding:14px 16px;border-radius:14px;border:2px solid #c9d8d0;background:#fff;color:var(--ink);outline:none;transition:.15s}
+input[type=text]:focus{border-color:var(--red);box-shadow:0 0 0 4px rgba(200,16,46,.15)}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chip{flex:1 1 130px;text-align:center;padding:14px 12px;border-radius:14px;border:2px solid #c9d8d0;background:#fff;font-weight:700;color:var(--green-d);cursor:pointer;user-select:none;transition:.15s}
+.chip:hover{border-color:var(--green)}
+.chip.on{background:var(--green);color:#fff;border-color:var(--green-d);box-shadow:0 6px 16px rgba(11,107,74,.35);transform:translateY(-1px)}
+.grade{display:inline-block;background:var(--gold);color:#4a3200;padding:8px 16px;border-radius:999px;font-weight:800}
+.btn{font-weight:800;font-size:17px;padding:15px 26px;border-radius:14px;transition:.15s;letter-spacing:.01em}
+.btn.red{background:linear-gradient(180deg,#e0213f,var(--red-d));color:#fff;box-shadow:0 6px 0 #6d0616}
+.btn.green{background:linear-gradient(180deg,#14916a,var(--green-d));color:#fff;box-shadow:0 6px 0 #03281c}
+.btn.gold{background:linear-gradient(180deg,#ffd868,var(--gold-d));color:#4a3200;box-shadow:0 6px 0 #8a6a10}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.4)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.rules{margin-top:20px;background:#f2f7f4;border-radius:16px;padding:16px 18px;font-size:14px;line-height:1.7;color:#2c443a}
+.rules b{color:var(--red-d)}
+
+.studentbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;font-weight:600}
+.scorepill{background:var(--gold);color:#4a3200;padding:8px 16px;border-radius:999px;font-weight:700}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.step{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:10px;text-align:center;font-weight:700;font-size:14px;opacity:.75}
+.step small{display:block;font-weight:600;font-size:12px;opacity:.85}
+.step.on{background:var(--red);border-color:var(--gold);opacity:1;box-shadow:0 0 0 3px rgba(246,196,69,.35)}
+.step.done{background:var(--green);opacity:1}
+.qhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+.tag{background:var(--red);color:#fff;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px}
+#qnum{font-weight:700;color:#5a7268;font-size:14px;margin-right:auto}
+.bar{height:10px;background:#e5eee9;border-radius:999px;overflow:hidden;margin-bottom:14px}
+.bar i{display:block;height:100%;width:0;background:repeating-linear-gradient(45deg,var(--red) 0 10px,#fff 10px 20px);transition:width .35s}
+.qtext{font-size:clamp(16px,2.4vw,19px);line-height:1.55;margin:8px 0 12px;font-weight:500}
+.qtext sub,.fbig sub,.ex sub,.fm sub{font-size:.7em}
+.fstrip{background:#fff3cf;border:2px solid var(--gold);border-radius:14px;padding:10px 14px;font-weight:700;color:#4a3200;margin:0 0 14px;font-size:14.5px;line-height:1.5}
+.qgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:20px;align-items:start}
+@media(max-width:760px){.qgrid{grid-template-columns:1fr}}
+.diagram{background:linear-gradient(180deg,#eaf5ef 0%,#fff 100%);border:2px solid #cfe3d8;border-radius:18px;padding:6px;min-height:200px;display:flex;align-items:center;justify-content:center}
+.diagram>*{width:100%}
+.diagram svg{width:100%;height:auto;display:block;max-height:250px}
+.cap{text-align:center;font-weight:700;color:var(--green-d);margin:0 0 6px}
+.answer label{font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--green-d)}
+.ansrow{display:flex;align-items:center;gap:10px;margin:8px 0 12px}
+.ansrow input{font-size:26px;font-weight:700;text-align:right}
+.unit{font-size:22px;font-weight:800;color:var(--red-d);min-width:48px}
+.pad{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.pad button{background:#fff;border:2px solid #c9d8d0;border-radius:14px;padding:0;min-height:54px;font-size:22px;font-weight:700;color:var(--green-d);box-shadow:0 4px 0 #c9d8d0;transition:.1s}
+.pad button:active{transform:translateY(3px);box-shadow:0 1px 0 #c9d8d0;background:#eaf5ef}
+.pad button.op{background:var(--green);color:#fff;border-color:var(--green-d);box-shadow:0 4px 0 var(--green-d)}
+.pad button.del{background:var(--red);color:#fff;border-color:var(--red-d);box-shadow:0 4px 0 var(--red-d)}
+.pad button.wide{grid-column:span 3}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.actions .btn{flex:1}
+.fb{margin-top:14px;padding:14px 16px;border-radius:14px;line-height:1.6;font-size:15px}
+.fb.ok{background:#e3f6ec;border:2px solid #34a56f;color:#0b4a31}
+.fb.no{background:#fde8ea;border:2px solid #e0485c;color:#7a0d1d}
+.fb .ex2{margin-top:6px;font-size:14px;opacity:.95}
+.hint{margin-top:18px;background:#f2f7f4;border-radius:14px;padding:12px 16px;font-size:14px;color:#2c443a}
+.hint summary{cursor:pointer;font-weight:700;color:var(--green-d)}
+.hint .inner{margin-top:12px}
+.shake{animation:shake .35s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.quit{margin-top:16px;text-align:center}
+.quit button{background:none;color:#bfe3d3;text-decoration:underline;font-size:14px}
+
+/* formula + examples */
+.fbox{background:linear-gradient(135deg,#0b6b4a,#06402c);color:#fff;border-radius:18px;padding:16px 18px;margin:14px 0;border:2px solid var(--gold)}
+.fbox .ft{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ffe38a;font-weight:800}
+.fbox .fm{font-size:clamp(16px,2.6vw,22px);font-weight:700;margin-top:6px;line-height:1.7}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 6px;font-size:.85em}
+.frac span:first-child{border-bottom:2px solid #fff;padding:0 8px 4px}
+.frac span:last-child{padding-top:4px}
+.exgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.exgrid{grid-template-columns:1fr}}
+.exbox{background:#fff;border:2px dashed #b8cfc3;border-radius:16px;padding:14px;font-size:14.5px;line-height:1.6}
+.exbox svg{max-width:230px;margin:6px auto;display:block;height:auto}
+.exbox p{margin:4px 0}
+table.ex{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}
+table.ex th,table.ex td{padding:6px 8px;border-bottom:1px solid #dbe6e0;text-align:left}
+table.ex th{color:var(--green-d);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+table.ex td:nth-child(n+2),table.ex th:nth-child(n+2){text-align:right}
+table.ex tr.t td{background:#fff3cf;font-weight:800;border-bottom:0}
+.steps-l{margin:8px 0 4px 20px;line-height:1.7;color:#2c443a}
+.cbar{display:flex;height:32px;border-radius:10px;overflow:hidden;margin:8px 0 4px;color:#fff;font-size:12px;font-weight:800}
+.cbar span{display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden}
+.cbar .c0{background:#c8102e}.cbar .c1{background:#0b6b4a}.cbar .c2{background:#c99a1a;color:#3a2800}
+.cbar .c3{background:#7d0b1f}.cbar .c4{background:#06402c}
+
+/* ornament visuals */
+.fv{padding:14px 8px 10px;text-align:center}
+.fbig{font-size:clamp(32px,6vw,48px);font-weight:800;letter-spacing:-.02em;color:var(--red-d);line-height:1.1}
+.fname{font-weight:600;color:#3b5249;margin-top:4px}
+.fmr{display:inline-block;margin-top:8px;background:var(--green);color:#fff;border-radius:999px;padding:6px 14px;font-weight:700;font-size:14px}
+.orns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:14px}
+.orn{display:flex;flex-direction:column;align-items:center}
+.orn .str{width:2px;height:14px;background:#b79a3d}
+.orn .cp{width:14px;height:8px;background:var(--gold-d);border-radius:3px 3px 0 0}
+.ball{width:70px;height:70px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;box-shadow:inset -6px -8px 14px rgba(0,0,0,.25),inset 6px 6px 12px rgba(255,255,255,.35),0 6px 12px rgba(0,0,0,.2)}
+.ball b{font-size:21px;line-height:1.05}
+.ball small{font-size:12px;font-weight:700;opacity:.95}
+.ball.c0{background:radial-gradient(circle at 30% 30%,#ff6b7f,#c8102e 60%,#7d0b1f)}
+.ball.c1{background:radial-gradient(circle at 30% 30%,#3ed198,#0b6b4a 60%,#042b1e)}
+.ball.c2{background:radial-gradient(circle at 30% 30%,#ffe38a,#d9a520 60%,#8a6a10);color:#3a2800}
+.orn.target .ball{outline:4px solid var(--ink);outline-offset:3px}
+.orn .tgt{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);margin-top:6px}
+.orns-l{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5a7268;margin-top:12px}
+
+.modal{position:fixed;inset:0;background:rgba(2,20,14,.78);display:flex;align-items:center;justify-content:center;z-index:10;padding:16px;backdrop-filter:blur(4px)}
+.modal[hidden]{display:none}
+.modal .card{max-width:560px;width:100%;text-align:center;max-height:94vh;overflow:auto;animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.badges{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:14px 0}
+.badge{text-align:center;font-size:13px;font-weight:700;color:var(--green-d)}
+.badge svg{filter:drop-shadow(0 8px 12px rgba(0,0,0,.3))}
+.badge button{margin-top:6px;background:var(--green);color:#fff;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:700}
+.locked{width:150px;height:180px;border-radius:20px;border:3px dashed #b8c9c0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#7d9188;font-weight:700;gap:6px;padding:10px;text-align:center;font-size:13px}
+.locked b{font-size:42px}
+#refModal .card{max-width:820px;text-align:left}
+.refgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px;margin:12px 0}
+.refel{background:#fff;border:2px solid #cfe3d8;border-radius:12px;padding:8px;text-align:center;line-height:1.25}
+.refel b{display:block;font-size:20px;color:var(--red-d)}
+.refel span{display:block;font-size:12px;color:#3b5249}
+.refel em{display:block;font-style:normal;font-weight:800;color:var(--green-d)}
+.dia{background:#fff3cf;border-radius:12px;padding:10px 14px;font-weight:700;color:#4a3200;margin-top:6px}
+table.sc{width:100%;border-collapse:collapse;margin:14px 0;font-size:16px}
+table.sc th,table.sc td{padding:10px 12px;border-bottom:1px solid #dbe6e0;text-align:left}
+table.sc th{color:var(--green-d);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+table.sc td:last-child,table.sc th:last-child{text-align:right;font-weight:800}
+table.sc tr.tot td{border-bottom:0;background:#fff3cf;font-size:19px}
+.who{display:flex;flex-wrap:wrap;gap:8px 18px;color:#3b5249;font-weight:600;margin:8px 0}
+.who b{color:var(--ink)}
+.banner{font-size:18px;font-weight:700;margin:10px 0;color:var(--red-d)}
+.resbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.resbtns .btn{flex:1 1 180px}
+@media print{
+  #snow,.top,.resbtns,.badge button,.quit{display:none!important}
+  body{background:#fff;color:#000}
+  .card{box-shadow:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="snow" aria-hidden="true"></canvas>
+<div class="wrap">
+  <header class="top">
+    <div class="logo">❄ Molecular Mass <span>Challenge</span><small>Holiday Chemistry Activity</small></div>
+    <div class="tools">
+      <button id="refBtn" class="icon" type="button" title="Atomic masses">🧪 Atomic masses</button>
+      <button id="muteBtn" class="icon" type="button" aria-label="Turn sound off" title="Sound on/off">🔊</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- WELCOME -->
+    <section id="welcome" class="card">
+      <h1>Ready to weigh some molecules? 🎄</h1>
+      <p class="lead">Find atomic and molecular masses, work out percent composition, collect a badge for every part you finish, and earn the golden Master badge with a perfect score.</p>
+
+      <label class="l" for="nameInput">Student name</label>
+      <input id="nameInput" type="text" maxlength="40" autocomplete="name" placeholder="Type your full name">
+
+      <label class="l">Grade</label>
+      <span class="grade">Grade 11</span>
+
+      <label class="l">Section</label>
+      <div class="chips" id="sectionChips" role="radiogroup" aria-label="Section">
+        <div class="chip" role="radio" tabindex="0" aria-checked="false" data-v="Daniel">Daniel</div>
+        <div class="chip" role="radio" tabindex="0" aria-checked="false" data-v="Ezekiel">Ezekiel</div>
+      </div>
+
+      <div class="rules">
+        <b>How it works</b><br>
+        • Part 1: Mass of one atom and of a diatomic molecule (10 pts)<br>
+        • Part 2: Molecular mass of ionic compounds, organic compounds and compounds with many atoms (10 pts)<br>
+        • Part 3: Percent composition of an element in a compound (10 pts)<br>
+        • Each part starts with a worked example and the formula to use. The example stays available while you answer.<br>
+        • Each question is worth 1 point and has one attempt. Use the <b>atomic masses table</b> (🧪 button, top right).<br>
+        • Answers may be rounded to <b>2 decimal places</b>. Masses are in <b>amu</b>.<br>
+        • Use the keyboard, mouse, pen, or touch keypad. Press <b>Enter</b> to check.
+      </div>
+
+      <div style="margin-top:22px"><button id="startBtn" class="btn red" type="button" disabled>Start the challenge ▶</button></div>
+    </section>
+
+    <!-- PART INTRO -->
+    <section id="intro" hidden>
+      <div class="studentbar"><span id="iInfo"></span><span class="scorepill">Score <b id="iScore">0</b> / 30</span></div>
+      <div class="card">
+        <div id="introBody"></div>
+        <div class="resbtns">
+          <button id="introRef" class="btn gold" type="button">🧪 Atomic masses</button>
+          <button id="introStart" class="btn red" type="button">Start ▶</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="quiz" hidden>
+      <div class="studentbar"><span id="sInfo"></span><span class="scorepill">Score <b id="sScore">0</b> / 30</span></div>
+      <div class="steps" id="steps"></div>
+      <div class="card">
+        <div class="qhead">
+          <span id="tag" class="tag"></span>
+          <span id="qnum"></span>
+          <button id="speakBtn" class="icon small" type="button">🔊 Read aloud</button>
+        </div>
+        <div class="bar"><i id="bar"></i></div>
+        <h2 id="partTitle"></h2>
+        <p id="qtext" class="qtext"></p>
+        <div id="fstrip" class="fstrip"></div>
+        <div class="qgrid">
+          <div><div id="diagram" class="diagram"></div></div>
+          <div class="answer">
+            <label for="ans">Your answer</label>
+            <div class="ansrow"><input id="ans" type="text" inputmode="none" autocomplete="off" enterkeyhint="done" placeholder="0.00" aria-label="Your answer"><span class="unit" id="unit">amu</span></div>
+            <div id="pad" class="pad"></div>
+            <div class="actions">
+              <button id="checkBtn" class="btn red" type="button">Check answer</button>
+              <button id="nextBtn" class="btn green" type="button" hidden>Next ▶</button>
+            </div>
+            <div id="fb" class="fb" hidden></div>
+          </div>
+        </div>
+        <details class="hint" id="exDet"><summary>📘 Show the worked example</summary><div class="inner" id="exBody"></div></details>
+      </div>
+      <div class="quit"><button id="quitBtn" type="button">Quit to start screen</button></div>
+    </section>
+
+    <!-- RESULTS -->
+    <section id="results" class="card" hidden>
+      <h1>Challenge complete! 🎄</h1>
+      <div class="who" id="who"></div>
+      <div class="banner" id="banner"></div>
+      <table class="sc" id="scoreTable"></table>
+      <h2>Your badges</h2>
+      <div class="badges" id="badgeRow"></div>
+      <div class="resbtns">
+        <button class="btn gold" id="printBtn" type="button">🖨 Print results</button>
+        <button class="btn green" id="againBtn" type="button">↻ Try new questions</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="modal" class="modal" hidden role="dialog" aria-modal="true">
+  <div class="card">
+    <h2 id="mTitle"></h2>
+    <p id="mText" class="lead"></p>
+    <div id="mBadges" class="badges"></div>
+    <button id="mBtn" class="btn red" type="button"></button>
+  </div>
+</div>
+
+<div id="refModal" class="modal" hidden role="dialog" aria-modal="true" aria-label="Atomic masses">
+  <div class="card">
+    <h2>🧪 Atomic masses (amu)</h2>
+    <div id="refGrid" class="refgrid"></div>
+    <div class="dia">Diatomic elements (always found as pairs): H₂, N₂, O₂, F₂, Cl₂, Br₂, I₂</div>
+    <div style="margin-top:16px;text-align:center"><button id="refClose" class="btn green" type="button">Close</button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s);
+
+/* ---------- Chemistry data ---------- */
+const EL={
+ H:['Hydrogen',1.01,1],He:['Helium',4.00,2],Li:['Lithium',6.94,3],Be:['Beryllium',9.01,4],B:['Boron',10.81,5],
+ C:['Carbon',12.01,6],N:['Nitrogen',14.01,7],O:['Oxygen',16.00,8],F:['Fluorine',19.00,9],Ne:['Neon',20.18,10],
+ Na:['Sodium',22.99,11],Mg:['Magnesium',24.31,12],Al:['Aluminum',26.98,13],Si:['Silicon',28.09,14],P:['Phosphorus',30.97,15],
+ S:['Sulfur',32.06,16],Cl:['Chlorine',35.45,17],Ar:['Argon',39.95,18],K:['Potassium',39.10,19],Ca:['Calcium',40.08,20],
+ Mn:['Manganese',54.94,25],Fe:['Iron',55.85,26],Cu:['Copper',63.55,29],Zn:['Zinc',65.38,30],Br:['Bromine',79.90,35],
+ Ag:['Silver',107.87,47],I:['Iodine',126.90,53],Ba:['Barium',137.33,56]
+};
+const r2=x=>Math.round((x+1e-9)*100)/100;
+const fmt=x=>r2(x).toFixed(2);
+const subs=f=>f.replace(/(\d+)/g,'<sub>$1</sub>');
+const SUB='₀₁₂₃₄₅₆₇₈₉';
+const usub=f=>f.replace(/\d/g,d=>SUB[+d]);
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function pickN(a,n){return shuffle(a).slice(0,n)}
+function parse(f){
+  let i=0;
+  function num(){let s='';while(i<f.length&&/\d/.test(f[i])){s+=f[i];i++}return s?parseInt(s,10):1}
+  function grp(){
+    const m={};
+    while(i<f.length){
+      const ch=f[i];
+      if(ch==='('){i++;const sub=grp();const n=num();for(const k in sub)m[k]=(m[k]||0)+sub[k]*n}
+      else if(ch===')'){i++;return m}
+      else{let s=ch;i++;if(i<f.length&&/[a-z]/.test(f[i])){s+=f[i];i++}const n=num();m[s]=(m[s]||0)+n}
+    }
+    return m;
+  }
+  return grp();
+}
+function comp(f){
+  const c=parse(f),rows=[];let tot=0;
+  for(const s in c){const t=r2(c[s]*EL[s][1]);tot+=t;rows.push({sym:s,n:c[s],ar:EL[s][1],t})}
+  return {rows,mr:r2(tot)};
+}
+
+/* ---------- Snow ---------- */
+(function(){
+  const c=$('#snow'),x=c.getContext('2d');let W,H;const fl=[];
+  function rs(){W=c.width=innerWidth;H=c.height=innerHeight}
+  addEventListener('resize',rs);rs();
+  for(let i=0;i<90;i++)fl.push({x:Math.random()*W,y:Math.random()*H,r:1+Math.random()*3,s:.3+Math.random()*1.1,d:Math.random()*6.28});
+  function tick(){
+    x.clearRect(0,0,W,H);x.fillStyle='rgba(255,255,255,.8)';
+    fl.forEach(f=>{f.y+=f.s;f.d+=.01;f.x+=Math.sin(f.d)*.5;if(f.y>H+5){f.y=-5;f.x=Math.random()*W}
+      x.beginPath();x.arc(f.x,f.y,f.r,0,7);x.fill()});
+    requestAnimationFrame(tick);
+  }
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches)tick();
+})();
+
+/* ---------- Sound ---------- */
+let audioCtx,soundOn=true;
+function tone(freq,dur,type,vol,delay){
+  if(!soundOn)return;
+  try{
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    const t=audioCtx.currentTime+(delay||0),o=audioCtx.createOscillator(),g=audioCtx.createGain();
+    o.type=type||'sine';o.frequency.value=freq;
+    g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vol||.15,t+.01);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+dur+.05);
+  }catch(e){}
+}
+const sfx={
+  click:()=>tone(660,.07,'triangle',.07),
+  ok:()=>{tone(784,.15,'sine',.15);tone(988,.22,'sine',.15,.1)},
+  bad:()=>{tone(220,.25,'sawtooth',.07);tone(165,.32,'sawtooth',.07,.12)},
+  badge:()=>[523,659,784,1047,1319].forEach((f,i)=>tone(f,.3,'triangle',.14,i*.12)),
+  master:()=>[523,659,784,1047,784,1047,1319,1568,2093].forEach((f,i)=>tone(f,.32,'triangle',.14,i*.13))
+};
+$('#muteBtn').addEventListener('click',()=>{
+  soundOn=!soundOn;
+  $('#muteBtn').textContent=soundOn?'🔊':'🔇';
+  $('#muteBtn').setAttribute('aria-label',soundOn?'Turn sound off':'Turn sound on');
+  if(!soundOn&&window.speechSynthesis)speechSynthesis.cancel();
+  else sfx.click();
+});
+function speak(t){
+  if(!soundOn||!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);u.rate=.95;speechSynthesis.speak(u);
+}
+
+/* ---------- Visuals ---------- */
+function atomSVG(sym){
+  const z=EL[sym][2],caps=[2,8,8,18];let left=z;const sh=[];
+  for(const c of caps){const n=Math.min(c,left);if(n>0)sh.push(n);left-=n}
+  const cx=150,cy=110,cols=['#c8102e','#0b6b4a','#c99a1a','#c8102e'];
+  let s=`<svg viewBox="0 0 300 220" role="img" aria-label="Model of one ${EL[sym][0]} atom">`;
+  sh.forEach((n,i)=>{
+    const r=48+i*20;
+    s+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#9fbfb0" stroke-width="2" stroke-dasharray="4 5"/>`;
+    for(let k=0;k<n;k++){
+      const a=(k/n)*Math.PI*2+i*.7;
+      s+=`<circle cx="${(cx+r*Math.cos(a)).toFixed(1)}" cy="${(cy+r*Math.sin(a)).toFixed(1)}" r="6" fill="${cols[i]}" stroke="#fff" stroke-width="1.5"/>`;
+    }
+  });
+  s+=`<circle cx="${cx}" cy="${cy}" r="32" fill="#c8102e" stroke="#7d0b1f" stroke-width="3"/>`;
+  s+=`<circle cx="${cx-9}" cy="${cy-10}" r="9" fill="#fff" opacity=".25"/>`;
+  s+=`<text x="${cx}" y="${cy+9}" text-anchor="middle" font-size="26" font-weight="800" fill="#fff" font-family="Inter,Segoe UI,Arial,sans-serif">${sym}</text></svg>`;
+  return s;
+}
+function diSVG(sym){
+  return `<svg viewBox="0 0 300 170" role="img" aria-label="Diatomic molecule of ${EL[sym][0]}">
+<circle cx="112" cy="85" r="50" fill="#c8102e" stroke="#7d0b1f" stroke-width="3"/>
+<circle cx="188" cy="85" r="50" fill="#0b6b4a" stroke="#042b1e" stroke-width="3" opacity=".92"/>
+<circle cx="96" cy="66" r="13" fill="#fff" opacity=".22"/><circle cx="172" cy="66" r="13" fill="#fff" opacity=".22"/>
+<text x="100" y="95" text-anchor="middle" font-size="30" font-weight="800" fill="#fff" font-family="Inter,Segoe UI,Arial,sans-serif">${sym}</text>
+<text x="200" y="95" text-anchor="middle" font-size="30" font-weight="800" fill="#fff" font-family="Inter,Segoe UI,Arial,sans-serif">${sym}</text>
+<text x="150" y="158" text-anchor="middle" font-size="18" font-weight="800" fill="#12261f" font-family="Inter,Segoe UI,Arial,sans-serif">${sym}${usub('2')}</text></svg>`;
+}
+function ornaments(f,target){
+  const c=parse(f);let i=0,h='';
+  for(const s in c){
+    h+=`<div class="orn${s===target?' target':''}"><span class="str"></span><span class="cp"></span><div class="ball c${i%3}"><b>${s}</b><small>${fmt(EL[s][1])}</small></div>${s===target?'<div class="tgt">find this</div>':''}</div>`;
+    i++;
+  }
+  return h;
+}
+function formulaVisual(f,name,mr,target){
+  return `<div class="fv"><div class="fbig">${subs(f)}</div><div class="fname">${name}</div>${mr?`<div class="fmr">Molecular mass = ${fmt(mr)} amu</div>`:''}<div class="orns-l">Atomic masses (amu)</div><div class="orns">${ornaments(f,target)}</div></div>`;
+}
+function compBar(f,mr){
+  const c=comp(f);
+  return `<div class="cbar">`+c.rows.map((r,i)=>{const p=r2(r.n*r.ar/mr*100);return `<span class="c${i%5}" style="flex:${p}" title="${r.sym}">${p>=9?`${r.sym} ${fmt(p)}%`:''}</span>`}).join('')+`</div>`;
+}
+
+/* ---------- Question generators ---------- */
+function genP1(){
+  const atoms=pickN(['H','He','Li','Be','B','N','O','F','Ne','Na','Mg','Al','Si','P','S','Cl','Ar','K','Ca'],5);
+  const dia=pickN(['H','N','F','Cl','Br','I'],5);
+  const qs=[];
+  for(let i=0;i<5;i++){
+    const a=atoms[i],an=EL[a][0],am=EL[a][1];
+    qs.push({tag:'One atom',unit:'amu',
+      text:`What is the mass of <b>one atom</b> of <b>${an} (${a})</b>?`,
+      speak:`What is the mass of one atom of ${an}?`,
+      vis:`<div><div class="cap">1 atom of ${an}</div>${atomSVG(a)}</div>`,
+      answer:am,
+      expl:`One atom of ${an} (${a}) has a mass of <b>${fmt(am)} amu</b>, read from the periodic table.`});
+    const d=dia[i],dn=EL[d][0],dm=EL[d][1];
+    qs.push({tag:'Diatomic molecule',unit:'amu',
+      text:`${dn} exists as a <b>diatomic molecule</b>, ${d}<sub>2</sub>. What is the molecular mass of one ${d}<sub>2</sub> molecule?`,
+      speak:`${dn} exists as a diatomic molecule, made of two atoms. What is the molecular mass of one molecule?`,
+      vis:`<div><div class="cap">1 molecule of ${dn}</div>${diSVG(d)}</div>`,
+      answer:r2(2*dm),
+      expl:`${d}<sub>2</sub> has 2 atoms of ${dn}: 2 × ${fmt(dm)} = <b>${fmt(2*dm)} amu</b>`});
+  }
+  return qs;
+}
+const IONIC=[['NaCl','sodium chloride'],['CaCl2','calcium chloride'],['MgO','magnesium oxide'],['KBr','potassium bromide'],['Al2O3','aluminum oxide'],['K2SO4','potassium sulfate'],['CaCO3','calcium carbonate'],['NaOH','sodium hydroxide'],['Mg(OH)2','magnesium hydroxide'],['AgNO3','silver nitrate'],['ZnCl2','zinc chloride'],['Na2CO3','sodium carbonate'],['BaCl2','barium chloride'],['KNO3','potassium nitrate'],['Fe2O3','iron(III) oxide']];
+const ORG=[['CH4','methane'],['C2H6','ethane'],['C3H8','propane'],['C4H10','butane'],['CH3OH','methanol'],['CH3COOH','acetic acid'],['C6H6','benzene'],['C6H12O6','glucose'],['C12H22O11','sucrose'],['C2H4','ethene'],['C8H18','octane']];
+const MULTI=[['H2SO4','sulfuric acid'],['H3PO4','phosphoric acid'],['(NH4)2SO4','ammonium sulfate'],['Ca3(PO4)2','calcium phosphate'],['Al2(SO4)3','aluminum sulfate'],['NH4NO3','ammonium nitrate'],['Fe(NO3)3','iron(III) nitrate'],['KMnO4','potassium permanganate'],['Mg3(PO4)2','magnesium phosphate'],['(NH4)3PO4','ammonium phosphate'],['Fe2(SO4)3','iron(III) sulfate']];
+function genP2(){
+  const mk=(list,n,tag)=>pickN(list,n).map(([f,name])=>{
+    const c=comp(f);
+    const lines=c.rows.map(r=>`${r.sym}: ${r.n} × ${fmt(r.ar)} = ${fmt(r.t)}`).join('<br>');
+    return {tag,unit:'amu',
+      text:`Calculate the molecular mass of <b>${name}</b>, ${subs(f)}.`,
+      speak:`Calculate the molecular mass of ${name}. Use the atomic masses shown.`,
+      vis:formulaVisual(f,name),
+      answer:c.mr,
+      expl:`${lines}<br>Add them: <b>${fmt(c.mr)} amu</b>`};
+  });
+  return [...mk(IONIC,4,'Ionic compound'),...mk(ORG,3,'Organic compound'),...mk(MULTI,3,'Compound with many atoms')];
+}
+const PCT=[['CO2','carbon dioxide'],['NaCl','sodium chloride'],['CH4','methane'],['NH3','ammonia'],['CaCO3','calcium carbonate'],['H2SO4','sulfuric acid'],['NaOH','sodium hydroxide'],['MgO','magnesium oxide'],['Fe2O3','iron(III) oxide'],['Al2O3','aluminum oxide'],['KCl','potassium chloride'],['CaCl2','calcium chloride'],['NH4NO3','ammonium nitrate'],['C6H12O6','glucose'],['MgSO4','magnesium sulfate'],['Na2CO3','sodium carbonate'],['HCl','hydrochloric acid'],['(NH4)2SO4','ammonium sulfate'],['CuSO4','copper(II) sulfate'],['KNO3','potassium nitrate'],['C3H8','propane'],['CaO','calcium oxide'],['Mg(OH)2','magnesium hydroxide']];
+function genP3(){
+  return pickN(PCT,10).map(([f,name])=>{
+    const c=comp(f),r=c.rows[Math.floor(Math.random()*c.rows.length)];
+    const part=r2(r.n*r.ar),ans=r2(part/c.mr*100),en=EL[r.sym][0];
+    return {tag:'Percent composition',unit:'%',
+      text:`The molecular mass of <b>${name}</b> (${subs(f)}) is <b>${fmt(c.mr)} amu</b>. What is the percent composition of <b>${en} (${r.sym})</b> in the compound?`,
+      speak:`The molecular mass of ${name} is ${fmt(c.mr)} amu. What is the percent composition of ${en} in the compound?`,
+      vis:formulaVisual(f,name,c.mr,r.sym),
+      answer:ans,
+      expl:`% ${r.sym} = (${r.n} × ${fmt(r.ar)}) ÷ ${fmt(c.mr)} × 100 = ${fmt(part)} ÷ ${fmt(c.mr)} × 100 = <b>${fmt(ans)}%</b>`,
+      after:`<div class="ex2">Whole compound:</div>${compBar(f,c.mr)}`};
+  });
+}
+
+/* ---------- Part guides (formula + examples) ---------- */
+const PARTS=[
+ {title:'Part 1 · Atoms and diatomic molecules',
+  desc:'The mass of one atom is read from the periodic table. A diatomic molecule is made of two identical atoms, so you double the atomic mass. The diatomic elements are H₂, N₂, O₂, F₂, Cl₂, Br₂ and I₂.',
+  strip:'One atom: mass = atomic mass (periodic table) · Diatomic molecule: Mr = 2 × atomic mass'},
+ {title:'Part 2 · Molecular mass of compounds',
+  desc:'Count the atoms of each element (multiply by the number outside any brackets), multiply each count by its atomic mass, then add everything up. This works for ionic compounds, organic compounds and compounds with many atoms.',
+  strip:'Molecular mass (Mr) = Σ (number of atoms × atomic mass)'},
+ {title:'Part 3 · Percent composition',
+  desc:'Percent composition tells you how much of a compound’s mass comes from one element. Use the molecular mass given in the question.',
+  strip:'% of element = (number of atoms × atomic mass of the element) ÷ (molecular mass of the compound) × 100'}
+];
+function formulaBox(p){
+  if(p===0)return `<div class="fbox"><div class="ft">Key ideas</div><div class="fm">One atom: mass = atomic mass from the periodic table<br>Diatomic molecule: Mr = 2 × atomic mass</div></div>`;
+  if(p===1)return `<div class="fbox"><div class="ft">Formula</div><div class="fm">Molecular mass (Mr) = Σ (number of atoms × atomic mass)</div></div>`;
+  return `<div class="fbox"><div class="ft">Percent composition formula</div><div class="fm">% of element = <span class="frac"><span>number of atoms of the element × its atomic mass</span><span>molecular mass of the compound</span></span> × 100</div></div>`;
+}
+function exTable(f,name){
+  const c=comp(f);
+  const rows=c.rows.map(r=>`<tr><td>${r.sym}</td><td>${r.n}</td><td>${fmt(r.ar)}</td><td>${fmt(r.t)}</td></tr>`).join('');
+  return `<table class="ex"><tr><th>Element</th><th>Atoms</th><th>Atomic mass</th><th>Subtotal</th></tr>${rows}<tr class="t"><td colspan="3">Mr of ${subs(f)} (${name})</td><td>${fmt(c.mr)} amu</td></tr></table>`;
+}
+function exampleHTML(p){
+  if(p===0){
+    return `<div class="exgrid">
+<div class="exbox"><h3>Example A · One atom</h3><p>What is the mass of one atom of Carbon (C)?</p>${atomSVG('C')}<p>Find C on the periodic table: <b>${fmt(EL.C[1])} amu</b></p></div>
+<div class="exbox"><h3>Example B · Diatomic molecule</h3><p>What is the molecular mass of O<sub>2</sub>?</p>${diSVG('O')}<p>O<sub>2</sub> has 2 atoms: 2 × ${fmt(EL.O[1])} = <b>${fmt(2*EL.O[1])} amu</b></p></div></div>`;
+  }
+  if(p===1){
+    return `<div class="exgrid">
+<div class="exbox"><h3>Example A · Ionic compound with brackets</h3><p>Calcium nitrate, Ca(NO<sub>3</sub>)<sub>2</sub></p><ol class="steps-l"><li>Count atoms: Ca = 1, N = 1 × 2 = 2, O = 3 × 2 = 6</li><li>Multiply by atomic masses</li><li>Add the subtotals</li></ol>${exTable('Ca(NO3)2','calcium nitrate')}</div>
+<div class="exbox"><h3>Example B · Organic compound</h3><p>Ethanol, C<sub>2</sub>H<sub>5</sub>OH</p><ol class="steps-l"><li>Count atoms: C = 2, H = 5 + 1 = 6, O = 1</li><li>Multiply by atomic masses</li><li>Add the subtotals</li></ol>${exTable('C2H5OH','ethanol')}</div></div>`;
+  }
+  const c=comp('H2O'),h=c.rows[0],o=c.rows[1];
+  const ph=r2(h.t/c.mr*100),po=r2(o.t/c.mr*100);
+  return `<div class="exbox"><h3>Example · Water, H<sub>2</sub>O</h3>
+<ol class="steps-l"><li>Molecular mass: 2 × ${fmt(h.ar)} + 1 × ${fmt(o.ar)} = <b>${fmt(c.mr)} amu</b></li>
+<li>% H = (2 × ${fmt(h.ar)}) ÷ ${fmt(c.mr)} × 100 = ${fmt(h.t)} ÷ ${fmt(c.mr)} × 100 = <b>${fmt(ph)}%</b></li>
+<li>% O = (1 × ${fmt(o.ar)}) ÷ ${fmt(c.mr)} × 100 = ${fmt(o.t)} ÷ ${fmt(c.mr)} × 100 = <b>${fmt(po)}%</b></li>
+<li>Check: ${fmt(ph)}% + ${fmt(po)}% = ${fmt(ph+po)}%</li></ol>${compBar('H2O',c.mr)}</div>`;
+}
+
+/* ---------- Badges ---------- */
+const BADGES=[
+ {title:'Atom Spark',emoji:'⚛️',c1:'#c8102e',c2:'#7d0b1f',sub:'Part 1 · Atoms & diatomics'},
+ {title:'Compound Crafter',emoji:'🧪',c1:'#0b6b4a',c2:'#06402c',sub:'Part 2 · Molecular mass'},
+ {title:'Percent Pro',emoji:'📊',c1:'#c8102e',c2:'#0b6b4a',sub:'Part 3 · % composition'},
+ {title:'Molecular Master',emoji:'👑',c1:'#ffd868',c2:'#c99a1a',sub:'Perfect 30 / 30'}
+];
+const S={name:'',section:'',part:0,q:0,qs:[],scores:[0,0,0],badges:[false,false,false],locked:false};
+const cur=()=>S.qs[S.part][S.q];
+const total=()=>S.scores[0]+S.scores[1]+S.scores[2];
+const esc=t=>String(t).replace(/[<>&"]/g,'');
+
+function badgeSVG(i,uid,w){
+  const b=BADGES[i],h=Math.round(w*290/240),dark=i===3,tc=dark?'#4a3200':'#fff';
+  const score=i<3?`${S.scores[i]}/10`:'30/30';
+  const nm=esc((S.name||'Student').slice(0,26));
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 290" width="${w}" height="${h}" role="img" aria-label="${b.title} badge">
+<defs><linearGradient id="bg${uid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${b.c1}"/><stop offset="1" stop-color="${b.c2}"/></linearGradient>
+<linearGradient id="rg${uid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe38a"/><stop offset="1" stop-color="#c99a1a"/></linearGradient></defs>
+<circle cx="120" cy="110" r="94" fill="url(#rg${uid})"/>
+<circle cx="120" cy="110" r="82" fill="url(#bg${uid})"/>
+<circle cx="120" cy="110" r="72" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2" stroke-dasharray="3 6"/>
+<text x="120" y="56" text-anchor="middle" font-size="15" fill="${dark?'#7a5600':'#ffe38a'}" font-family="Segoe UI,Arial,sans-serif">★ ★ ★</text>
+<text x="120" y="130" text-anchor="middle" font-size="60" font-family="Segoe UI Emoji,Apple Color Emoji,Noto Color Emoji,sans-serif">${b.emoji}</text>
+<text x="120" y="170" text-anchor="middle" font-size="22" font-weight="800" fill="${tc}" font-family="Segoe UI,Arial,sans-serif">${score}</text>
+<rect x="16" y="212" width="208" height="74" rx="14" fill="#fffaf0" stroke="#f6c445" stroke-width="3"/>
+<text x="120" y="232" text-anchor="middle" font-size="18" font-weight="800" fill="#9b0a22" font-family="Segoe UI,Arial,sans-serif">${b.title}</text>
+<text x="120" y="248" text-anchor="middle" font-size="11" font-weight="600" fill="#0b6b4a" font-family="Segoe UI,Arial,sans-serif">${b.sub}</text>
+<text x="120" y="264" text-anchor="middle" font-size="12" font-weight="700" fill="#12261f" font-family="Segoe UI,Arial,sans-serif">${nm}</text>
+<text x="120" y="278" text-anchor="middle" font-size="10" font-weight="600" fill="#5a7268" font-family="Segoe UI,Arial,sans-serif">Grade 11 · ${esc(S.section)}</text>
+</svg>`;
+}
+function downloadBadge(i){
+  const svg=badgeSVG(i,'dl'+i,480),img=new Image();
+  img.onload=()=>{
+    const c=document.createElement('canvas');c.width=480;c.height=Math.round(480*290/240);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    c.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`${BADGES[i].title.replace(/\s+/g,'-')}-${S.name.replace(/\s+/g,'_')}.png`;document.body.appendChild(a);a.click();a.remove()});
+  };
+  img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+}
+
+/* ---------- Reference table ---------- */
+(function(){
+  const rows=Object.keys(EL).sort((a,b)=>EL[a][2]-EL[b][2]).map(s=>`<div class="refel"><b>${s}</b><span>${EL[s][0]}</span><em>${fmt(EL[s][1])}</em></div>`).join('');
+  $('#refGrid').innerHTML=rows;
+  const open=()=>{sfx.click();$('#refModal').hidden=false;$('#refClose').focus()};
+  const close=()=>{$('#refModal').hidden=true;sfx.click()};
+  $('#refBtn').addEventListener('click',open);
+  $('#introRef').addEventListener('click',open);
+  $('#refClose').addEventListener('click',close);
+  $('#refModal').addEventListener('click',e=>{if(e.target===$('#refModal'))close()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#refModal').hidden)close()});
+})();
+
+/* ---------- Screens ---------- */
+function show(id){['welcome','intro','quiz','results'].forEach(s=>$('#'+s).hidden=(s!==id));window.scrollTo({top:0})}
+
+let chosenSection='';
+function validate(){$('#startBtn').disabled=!($('#nameInput').value.trim().length>=2&&chosenSection)}
+$('#nameInput').addEventListener('input',validate);
+$('#nameInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('#startBtn').disabled){e.preventDefault();$('#startBtn').click()}});
+document.querySelectorAll('#sectionChips .chip').forEach(c=>{
+  const sel=()=>{
+    chosenSection=c.dataset.v;
+    document.querySelectorAll('#sectionChips .chip').forEach(x=>{x.classList.toggle('on',x===c);x.setAttribute('aria-checked',x===c)});
+    sfx.click();validate();
+  };
+  c.addEventListener('click',sel);
+  c.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();sel()}});
+});
+$('#startBtn').addEventListener('click',()=>{
+  S.name=$('#nameInput').value.trim();S.section=chosenSection;
+  sfx.click();startAll();
+});
+function startAll(){
+  S.qs=[genP1(),genP2(),genP3()];S.scores=[0,0,0];S.badges=[false,false,false];
+  const info=`${esc(S.name)} · Grade 11 · ${S.section}`;
+  $('#sInfo').textContent=info;$('#iInfo').textContent=info;
+  showIntro(0);
+}
+function showIntro(p){
+  S.part=p;
+  const P=PARTS[p];
+  $('#iScore').textContent=total();
+  $('#introBody').innerHTML=`<h1>${P.title}</h1><p class="lead">${P.desc}</p>${formulaBox(p)}<h2 style="margin:14px 0 8px">Worked example</h2>${exampleHTML(p)}`;
+  $('#introStart').textContent=`Start Part ${p+1} ▶`;
+  show('intro');$('#introStart').focus({preventScroll:true});
+}
+$('#introStart').addEventListener('click',()=>{sfx.click();startPart(S.part)});
+function startPart(p){
+  S.part=p;S.q=0;
+  $('#exBody').innerHTML=exampleHTML(p);
+  $('#exDet').open=false;
+  show('quiz');renderSteps();renderQ();
+}
+function renderSteps(){
+  $('#steps').innerHTML=PARTS.map((p,i)=>`<div class="step ${i===S.part?'on':''} ${S.badges[i]?'done':''}">${S.badges[i]?'✓ ':''}Part ${i+1}<small>${S.scores[i]} / 10</small></div>`).join('');
+  $('#sScore').textContent=total();
+}
+function renderQ(){
+  const q=cur(),p=PARTS[S.part];
+  S.locked=false;
+  $('#partTitle').textContent=p.title;
+  $('#tag').textContent=q.tag;
+  $('#qnum').textContent=`Question ${S.q+1} of 10`;
+  $('#bar').style.width=(S.q/10*100)+'%';
+  $('#qtext').innerHTML=q.text;
+  $('#fstrip').textContent='📐 '+p.strip;
+  $('#diagram').innerHTML=q.vis;
+  $('#unit').textContent=q.unit;
+  const a=$('#ans');a.value='';a.disabled=false;
+  $('#fb').hidden=true;$('#fb').className='fb';
+  $('#checkBtn').hidden=false;$('#nextBtn').hidden=true;
+  a.focus({preventScroll:true});
+}
+
+// keypad
+(function(){
+  const keys=['7','8','9','⌫','4','5','6','C','1','2','3','.','0','Check'];
+  const pad=$('#pad');
+  keys.forEach(k=>{
+    const b=document.createElement('button');b.type='button';b.textContent=k==='Check'?'✔ Check':k;
+    if(k==='⌫'||k==='C')b.className='del';
+    if(k==='.')b.className='op';
+    if(k==='Check')b.className='op wide';
+    b.setAttribute('aria-label',{'⌫':'Backspace','C':'Clear','Check':'Check answer','.':'Decimal point'}[k]||k);
+    b.addEventListener('mousedown',e=>e.preventDefault());
+    b.addEventListener('click',()=>pressKey(k));
+    pad.appendChild(b);
+  });
+})();
+function pressKey(k){
+  if(S.locked){if(k==='Check')next();return}
+  const a=$('#ans');sfx.click();
+  if(k==='⌫')a.value=a.value.slice(0,-1);
+  else if(k==='C')a.value='';
+  else if(k==='.'){if(!a.value.includes('.'))a.value+=a.value===''?'0.':'.'}
+  else if(k==='Check')check();
+  else if(a.value.length<10)a.value+=k;
+}
+$('#ans').addEventListener('input',e=>{e.target.value=e.target.value.replace(/,/g,'.').replace(/[^0-9.]/g,'')});
+
+function check(){
+  if(S.locked)return;
+  const q=cur(),a=$('#ans');
+  const raw=a.value.trim().replace(/,/g,'.');
+  if(!/^(\d+\.?\d*|\.\d+)$/.test(raw)){
+    a.classList.remove('shake');void a.offsetWidth;a.classList.add('shake');sfx.bad();a.focus();return;
+  }
+  const v=parseFloat(raw),ok=Math.abs(v-q.answer)<=0.05;
+  S.locked=true;a.disabled=true;
+  if(ok)S.scores[S.part]++;
+  renderSteps();
+  const fb=$('#fb');fb.hidden=false;fb.className='fb '+(ok?'ok':'no');
+  fb.innerHTML=`<b>${ok?'✅ Correct! +1 point':'❌ Not quite.'}</b><div>Correct answer: <strong>${fmt(q.answer)} ${q.unit}</strong></div><div class="ex2">${q.expl}</div>${q.after||''}`;
+  ok?sfx.ok():sfx.bad();
+  $('#bar').style.width=((S.q+1)/10*100)+'%';
+  $('#checkBtn').hidden=true;
+  const nb=$('#nextBtn');nb.hidden=false;nb.textContent=S.q<9?'Next question ▶':'Finish Part '+(S.part+1)+' 🏅';
+  nb.focus({preventScroll:true});
+}
+function next(){
+  sfx.click();
+  if(S.q<9){S.q++;renderQ()}else completePart();
+}
+$('#checkBtn').addEventListener('click',check);
+$('#nextBtn').addEventListener('click',next);
+$('#speakBtn').addEventListener('click',()=>{if(!soundOn){soundOn=true;$('#muteBtn').textContent='🔊'}speak(cur().speak)});
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  if(!$('#modal').hidden||!$('#refModal').hidden||$('#quiz').hidden)return;
+  if(e.target.closest&&(e.target.closest('#pad')||e.target.closest('summary')||e.target.closest('#speakBtn')))return;
+  e.preventDefault();
+  S.locked?next():check();
+});
+
+function completePart(){
+  const p=S.part;S.badges[p]=true;renderSteps();
+  const master=p===2&&total()===30;
+  let html=`<div class="badge">${badgeSVG(p,'m'+p,190)}</div>`;
+  if(master)html+=`<div class="badge">${badgeSVG(3,'mm',190)}</div>`;
+  const sc=S.scores[p];
+  const msg=sc===10?'Flawless! Every answer was correct.':sc>=8?'Great work!':sc>=5?'Nice effort. Keep practicing.':'You finished it. Review the example and try again later.';
+  $('#mTitle').textContent=master?'🏆 MASTER BADGE UNLOCKED!':`🎉 Part ${p+1} complete!`;
+  $('#mText').textContent=`You scored ${sc} out of 10 in Part ${p+1}. ${msg}`+(master?' You completed all 3 parts with no errors: 30 / 30!':'');
+  $('#mBadges').innerHTML=html;
+  const btn=$('#mBtn');btn.textContent=p<2?`Continue to Part ${p+2} ▶`:'See my results ▶';
+  btn.onclick=()=>{$('#modal').hidden=true;sfx.click();p<2?showIntro(p+1):showResults()};
+  $('#modal').hidden=false;btn.focus();
+  master?sfx.master():sfx.badge();
+}
+
+function showResults(){
+  const tot=total(),master=tot===30;
+  show('results');
+  $('#who').innerHTML=`<span>Name: <b>${esc(S.name)}</b></span><span>Grade: <b>11</b></span><span>Section: <b>${S.section}</b></span><span>Date: <b>${new Date().toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'})}</b></span>`;
+  $('#banner').textContent=master?'🏆 Perfect score! You are a Molecular Master!':tot>=24?'⭐ Excellent work!':tot>=18?'👍 Good job!':'💪 Keep practicing. You can earn the Master badge next time!';
+  $('#scoreTable').innerHTML=`<tr><th>Part</th><th>Score</th></tr>
+  <tr><td>Part 1 · Atoms and diatomic molecules</td><td>${S.scores[0]} / 10</td></tr>
+  <tr><td>Part 2 · Molecular mass of compounds</td><td>${S.scores[1]} / 10</td></tr>
+  <tr><td>Part 3 · Percent composition</td><td>${S.scores[2]} / 10</td></tr>
+  <tr class="tot"><td>Total</td><td>${tot} / 30</td></tr>`;
+  let h='';
+  [0,1,2].forEach(i=>h+=`<div class="badge">${badgeSVG(i,'r'+i,150)}<br><button type="button" data-dl="${i}">⬇ Save PNG</button></div>`);
+  h+=master?`<div class="badge">${badgeSVG(3,'r3',150)}<br><button type="button" data-dl="3">⬇ Save PNG</button></div>`
+           :`<div class="badge"><div class="locked"><b>🔒</b>Master badge<br>Locked: get 30 / 30 with no errors</div></div>`;
+  $('#badgeRow').innerHTML=h;
+  $('#badgeRow').querySelectorAll('[data-dl]').forEach(b=>b.addEventListener('click',()=>{sfx.click();downloadBadge(+b.dataset.dl)}));
+  master?sfx.master():sfx.badge();
+}
+$('#printBtn').addEventListener('click',()=>{sfx.click();window.print()});
+$('#againBtn').addEventListener('click',()=>{sfx.click();startAll()});
+$('#quitBtn').addEventListener('click',()=>{
+  if(confirm('Quit and return to the start screen? Your progress will be lost.')){
+    if(window.speechSynthesis)speechSynthesis.cancel();show('welcome')
+  }
+});
+})();
+</script>
+</body>
+</html>
